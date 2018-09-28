@@ -48,17 +48,8 @@ class CribDragCalc extends Component<{}, CribCalcState> {
     const { guess } = this.state;
     const cypherTexts = this.state.cypherTexts.split("\n");
 
-    const [cypherOrd1, ...cypherOrd] = cypherTexts.map(
-      CypherFunctions.cypherTextToNumbers
-    );
-    const xorCyphers = cypherOrd.map(cypherText =>
-      CypherFunctions.xorCyphers(cypherText, cypherOrd1)
-    );
-    const cypherStrings = xorCyphers.map(CypherFunctions.ordsToString);
-
-    const cribDrag = xorCyphers.map(cypherText =>
-      CypherFunctions.cribDrag(cypherText, guess)
-    );
+    const plainTexts =
+      guess.length === 0 ? [] : CypherFunctions.cribDrag(cypherTexts, guess);
 
     return (
       <div className="cribDragCalc">
@@ -85,18 +76,11 @@ class CribDragCalc extends Component<{}, CribCalcState> {
         </form>
 
         <div className="cribDragCalc__results">
-          {cypherStrings.map((cypherText, i) => (
-            <div>
-              <p key={`cypherText${i}`}>{cypherText}</p>
-              <ul>
-                {cribDrag[i].map(ptm => (
-                  <li key={`cypherText${i}-plainText${ptm.index}`}>
-                    {ptm.plainText}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {plainTexts.map((texts, i) =>
+            texts.plainTexts.map((text, j) => (
+              <p key={`${text}${i}${j}`}>{text}</p>
+            ))
+          )}
         </div>
       </div>
     );
