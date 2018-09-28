@@ -6,3 +6,7 @@ textarea#messagesInput {
 .cribDragCalc__results {
   font-family: "Courier New", Courier, monospace;
 }
+
+input {
+  width: 300px;
+}

@@ -13,8 +13,5 @@
     "object-literal-sort-keys": false,
     "no-bitwise": false
   },
-  "jsRules": {
-    "object-literal-sort-keys": false,
-    "no-bitwise": false
-  }
+  "defaultSeverity": "warning"
 }

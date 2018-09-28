@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import "../CypherFunctions";
+import CypherFunctions from "../CypherFunctions";
 
 interface CribCalcState {
   guess: string;
@@ -6,42 +8,6 @@ interface CribCalcState {
 }
 
 class CribDragCalc extends Component<{}, CribCalcState> {
-  public static cribDrag(messages: string[], guess: string) {
-    const matches: string[] = [];
-
-    messages.forEach(message => {
-      for (let i = 0; i <= message.length - guess.length; i++) {
-        // const text = "";
-      }
-    });
-
-    return matches;
-  }
-
-  public static cypherTextToNumbers(cypherText: string) {
-    const chars: number[] = [];
-
-    for (let i = 0; i < cypherText.length - 1; i += 2) {
-      const hex = cypherText.substr(i, 2);
-      chars.push(parseInt(hex, 16));
-    }
-
-    return chars;
-  }
-
-  public static ordsToString(ords: number[]) {
-    const standIn = "-".charCodeAt(0);
-    const printSafeOrds = ords.map(ord => (ord <= 32 ? standIn : ord));
-
-    return String.fromCharCode(...printSafeOrds);
-  }
-
-  // public static xorCypherTexts(cypherTexts: string[]) {
-  //   cypherTexts.map(() => {
-  //     cypherTexts
-  //   })
-  // }
-
   constructor(props: {}) {
     super(props);
 
@@ -79,16 +45,20 @@ class CribDragCalc extends Component<{}, CribCalcState> {
   };
 
   public render() {
+    const { guess } = this.state;
     const cypherTexts = this.state.cypherTexts.split("\n");
-    const [cypherOrd1, ...cypherOrd] = cypherTexts.map(
-      CribDragCalc.cypherTextToNumbers
-    );
-    const xorCyphers = cypherOrd.map(cypher =>
-      cypher.map((ord, i) => ord ^ cypherOrd1[i])
-    );
-    const cypherStrings = xorCyphers.map(CribDragCalc.ordsToString);
 
-    // const xoredCypherTexts = CribDragCalc.xorCypherTexts(cypherTextsList);
+    const [cypherOrd1, ...cypherOrd] = cypherTexts.map(
+      CypherFunctions.cypherTextToNumbers
+    );
+    const xorCyphers = cypherOrd.map(cypherText =>
+      CypherFunctions.xorCyphers(cypherText, cypherOrd1)
+    );
+    const cypherStrings = xorCyphers.map(CypherFunctions.ordsToString);
+
+    const cribDrag = xorCyphers.map(cypherText =>
+      CypherFunctions.cribDrag(cypherText, guess)
+    );
 
     return (
       <div className="cribDragCalc">
@@ -116,7 +86,16 @@ class CribDragCalc extends Component<{}, CribCalcState> {
 
         <div className="cribDragCalc__results">
           {cypherStrings.map((cypherText, i) => (
-            <p key={i}>{cypherText}</p>
+            <div>
+              <p key={`cypherText${i}`}>{cypherText}</p>
+              <ul>
+                {cribDrag[i].map(ptm => (
+                  <li key={`cypherText${i}-plainText${ptm.index}`}>
+                    {ptm.plainText}
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
         </div>
       </div>
