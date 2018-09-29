@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import "../CypherFunctions";
-import CypherFunctions from "../CypherFunctions";
+import "../CribDrag";
+import CribDrag from "../CribDrag";
 
 interface CribCalcState {
   guess: string;
@@ -49,7 +49,13 @@ class CribDragCalc extends Component<{}, CribCalcState> {
     const cypherTexts = this.state.cypherTexts.split("\n");
 
     const plainTexts =
-      guess.length === 0 ? [] : CypherFunctions.cribDrag(cypherTexts, guess);
+      guess.length === 0 ? [] : CribDrag.cribDrag(cypherTexts, guess);
+
+    const key = CribDrag.getKey(cypherTexts[0], guess);
+    const keyString = CribDrag.ordsToString(key);
+    const keyHex = CribDrag.ordsToHex(key);
+    const lastKeyString = CribDrag.nextKey(keyString, 14);
+    const lastKeyHex = CribDrag.stringToHex(lastKeyString);
 
     return (
       <div className="cribDragCalc">
@@ -81,6 +87,19 @@ class CribDragCalc extends Component<{}, CribCalcState> {
               <p key={`${text}${i}${j}`}>{text}</p>
             ))
           )}
+
+          <div
+            className="cribDragCalc__results__keys"
+            style={{ border: "solid" }}
+          >
+            <h2>Enter the first message into Guess to get the key:</h2>
+            <h3>Current key:</h3>
+            <p>Hex: {keyHex}</p>
+            <p>String: {keyString}</p>
+            <h3>Last Key:</h3>
+            <p>Hex: {lastKeyHex}</p>
+            <p>String: {lastKeyString}</p>
+          </div>
         </div>
       </div>
     );
