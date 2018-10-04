@@ -14,7 +14,7 @@
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "predeploy": "npm run build; echo tabermcfarlin.com > build/CNAME",
+    "predeploy": "npm run build; echo www.tabermcfarlin.com > build/CNAME",
     "deploy": "gh-pages -b master -d build"
   },
   "devDependencies": {
